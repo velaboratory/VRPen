@@ -24,6 +24,8 @@ namespace VRPen {
         [Space(10)]
         [System.NonSerialized]
         public bool UIClickDown = false;
+        private bool DidClick = false;
+        private Button LastClicked;
 
         //drawing data
         float xFloat = 0f;
@@ -101,12 +103,18 @@ namespace VRPen {
             if (data.display == null) return;
 
             //if currently grabbing a uigrabbable
-            if (grabbed != null && data.hover != HoverState.NONE) {
+            if (UIClickDown && grabbed != null && data.hover != HoverState.NONE) {
                 Vector3 pos = grabbed.parent.parent.InverseTransformPoint(data.hit.point);
                 grabbed.updatePosRelativeToGrab(pos.x, pos.y);
                 return;
             }
 
+            //stop grabbing if we aren't clicking- 
+            //probably covered by a hover usecase but this is nice catch-all
+            if (!UIClickDown)
+            {
+                grabbed = null;
+            }
             
             //use raycast data to do stuff
             if (hover == HoverState.DRAW) canvasHover(data);
@@ -223,7 +231,7 @@ namespace VRPen {
             UIGrabbable currentGrab = data.hit.collider.GetComponent<UIGrabbable>();
             
             //grab event
-            if (grabbed == null && currentGrab != null) {
+            if (UIClickDown && grabbed == null && currentGrab != null) {
                 grabbed = currentGrab;
                 Vector3 pos = grabbed.parent.parent.InverseTransformPoint(data.hit.point);
                 grabbed.grab(pos.x, pos.y);
@@ -250,7 +258,7 @@ namespace VRPen {
             }
             
             //slider state
-            if (button is Slider) {
+            if (UIClickDown && button is Slider) {
 
                 //get value [0-1]
                 float value = data.hit.collider.transform.InverseTransformPoint(data.hit.point).x;
@@ -274,26 +282,33 @@ namespace VRPen {
             }
 
             //if click event
-            if (UIClickDown) {
+            if (UIClickDown)
+            {
 
                 //select
                 button.Select();
 
-                //button state
-                if (button is Button) {
-                    ((Button) button).onClick.Invoke();
+                //start clicking
+                if (button is Button)
+                {
+                    LastClicked = (Button)button;
+                    DidClick = true;
+                }//toggle state
+                else if (button is Toggle)
+                {
+                    ((Toggle)button).isOn = !((Toggle)button).isOn;
                 }
 
-                //toggle state
-                else if (button is Toggle) {
-                    ((Toggle) button).isOn = !((Toggle) button).isOn;
-                }
-
-            }
-
-            //still select if no click
-            else {
+            }//still select if no click
+            else
+            {
                 button.Select();
+                //consider clicking a button if it's the one we started on
+                if (DidClick && button == LastClicked)
+                {
+                    ((Button)button).onClick.Invoke();
+                    LastClicked = null;
+                }
             }
 
             //endline

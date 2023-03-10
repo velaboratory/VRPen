@@ -46,7 +46,7 @@ VRpen comes with the following input devices and is built in such a way that it 
 ```diff
 - Note: This package is in development and will undergo changes.
 ```
-To import this packet, add the git link to the Unity package manager. Please note that this package depends on TextMeshPro.
+To import this package, add the git link to the Unity package manager. Please note that this package depends on TextMeshPro.
 
 <img src="/Runtime/Materials/Readme_images/readme-img2.PNG" width="300" >
 
