@@ -24,8 +24,8 @@ namespace VRPen {
         [Space(10)]
         [System.NonSerialized]
         public bool UIClickDown = false;
-        private bool DidClick = false;
-        private Button LastClicked;
+        public bool DidClick = false;
+        public Button LastClicked;
 
         //drawing data
         float xFloat = 0f;
@@ -77,7 +77,8 @@ namespace VRPen {
             hover = HoverState.NONE;
             endLine();
 
-            if (grabbed != null) {
+            if (grabbed != null)
+            {
                 grabbed.unGrab();
                 grabbed = null;
             }
