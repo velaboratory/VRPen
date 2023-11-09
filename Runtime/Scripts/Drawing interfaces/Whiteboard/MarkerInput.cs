@@ -106,7 +106,7 @@ namespace VRPen {
 
             //break if there is nothing detected
             if (data.hit.collider == null) {
-                Debug.LogWarning("Marker is inside of the snap zone, but it couldnt find anything to snap to when raycasting. IDK if this will cause an issue. Be wary.");
+                //Debug.LogWarning("Marker is inside of the snap zone, but it couldnt find anything to snap to when raycasting. IDK if this will cause an issue. Be wary.");
                 return data;
             }
 
