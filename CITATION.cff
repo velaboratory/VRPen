@@ -4,5 +4,6 @@ authors:
   - family-names: Tuttle
     given-names: Alexander James
 title: "VRPen"
+repository: "https://github.com/velaboratory/vrpen"
 version: 2.3.3
 date-released: 2022-05-27
